@@ -2,14 +2,18 @@
 
 menu:
   主页: /
-  随笔: /tags/随笔/
+  标签: /tags/
+  分类: /categories/
+  归档: /archives/
+  关于我: /about/
+ 
 
 # SubNav
 subnav:
-  github: "#"
+  github: "https://kktao.github.com"
   weibo: "#"
   rss: "#"
-  zhihu: "#"
+  zhihu: "https://www.zhihu.com/people/steveforever"
   #qq: "#"
   #weixin: "#"
   #jianshu: "#"

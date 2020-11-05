@@ -11,21 +11,6 @@ author: kktao
 language: zh-CN
 timezone: Asia/Shanghai
 
-# my_yilia
-menu:
-  主页: /
-  标签: /tags/
-  分类: /categories/
-  归档: /archives/
-  关于我: /about/
- 
-rss: /atom.xml
-
-subnav:
-  github: "https://kktao.github.com"
-  weibo: "#"
-  rss: "#"
-  zhihu: "https://www.zhihu.com/people/steveforever"
 
 
 # URL
