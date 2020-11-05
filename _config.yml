@@ -108,3 +108,22 @@ deploy:
   repo: 
     github: 'git@github.com:kktao/kktao.github.io.git'
   branch: 'source'
+  
+jsonContent:
+    meta: false
+    pages: false
+    posts:
+      title: true
+      date: true
+      path: true
+      text: false
+      raw: false
+      content: false
+      slug: false
+      updated: false
+      comments: false
+      link: false
+      permalink: false
+      excerpt: false
+      categories: false
+      tags: true
