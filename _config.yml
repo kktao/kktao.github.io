@@ -31,6 +31,22 @@ code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
 
+# my_yilia
+menu:
+  主页: /
+  标签: /tags/
+  分类: /categories/
+  归档: /archives/
+  关于我: /about/
+ 
+rss: /atom.xml
+
+subnav:
+  github: "https://kktao.github.com"
+  weibo: "#"
+  rss: "#"
+  zhihu: "https://www.zhihu.com/people/steveforever"
+
 # Writing
 new_post_name: :title.md # File name of new posts
 default_layout: post
