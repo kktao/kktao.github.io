@@ -5,12 +5,12 @@ menu:
   标签: /tags/
   分类: /categories/
   归档: /archives/
-  关于我: /about/
+  更多: /about/
  
 
 # SubNav
 subnav:
-  github: "https://kktao.github.com"
+  github: "https://github.com/kktao/"
   weibo: "#"
   rss: "#"
   zhihu: "https://www.zhihu.com/people/steveforever"
