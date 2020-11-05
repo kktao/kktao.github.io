@@ -72,7 +72,7 @@ google_analytics: ''
 favicon: /favicon.png
 
 #你的头像url
-avatar:
+avatar: "https://gitee.com/kktao/my-file-space/raw/master/pic/logo.jpg"
 
 #是否开启分享
 share_jia: true
