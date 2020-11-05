@@ -104,6 +104,56 @@ ignore:
 theme: my_yilia
 # theme: landscape
 
+theme_config:
+  # npm install hexo-generator-feed --save
+  feed:
+    type: atom
+    path: atom.xml
+    limit: 10
+    hub:
+    content:
+    content_limit: 140
+    content_limit_delim: ' '
+    order_by: -date
+    # 这个是自定义的 icon
+    icon: https://gitee.com/kktao/my-file-space/raw/master/pic/avatar-32.ico
+
+
+  # npm install hexo-generator-searchdb --save
+  local_search:
+    enable: true
+    # If auto, trigger search by changing input.
+    # If manual, trigger search by pressing enter key or search button.
+    trigger: auto
+    # Show top n results per article, show all results by setting to -1
+    top_n_per_article: 1
+    # Unescape html strings to the readable one.
+    unescape: false
+    # Preload the search data when the page loads.
+    preload: true
+
+  # npm i hexo-permalink-pinyin --save
+  permalink_pinyin:
+    enable: true
+    separator: '-' # default: '-'
+
+  # 注意需要将下列配置增加在 theme_config 中，并保持相对缩进
+  # npm install hexo-symbols-count-time --save 后
+  symbols_count_time:
+    separated_meta: true
+    item_text_post: true
+    item_text_total: false
+    exclude_codeblock: true
+    awl: 2
+    wpm: 300
+   
+  # npm install hexo-generator-sitemap --save
+  sitemap:
+    path: sitemap.xml
+    rel: false
+
+
+
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
