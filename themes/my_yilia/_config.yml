@@ -2,10 +2,10 @@
 
 menu:
   主页: /
-  标签: /tags/
-  分类: /categories/
+  # 标签: /tags/
+  # 分类: /categories/
   归档: /archives/
-  更多: /about/
+  # 更多: /about/
  
 
 # SubNav
