@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>kktao的个人博客</title>
+  
+  <subtitle>探索·好奇</subtitle>
+  <link href="https://kktao.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://kktao.github.io/"/>
+  <updated>2020-12-30T14:43:52.724Z</updated>
+  <id>https://kktao.github.io/</id>
+  
+  <author>
+    <name>kktao</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="https://kktao.github.io/2020/12/30/hello-world/"/>
+    <id>https://kktao.github.io/2020/12/30/hello-world/</id>
+    <published>2020-12-30T14:43:52.724Z</published>
+    <updated>2020-12-30T14:43:52.724Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Welcome-to-my-blog"><a href="#Welcome-to-my-blog" class="headerlink" title="Welcome to my blog"></a>Welcome to my blog</h2><p>It’s what you do right now that makes a difference！</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;Welcome-to-my-blog&quot;&gt;&lt;a href=&quot;#Welcome-to-my-blog&quot; class=&quot;headerlink&quot; title=&quot;Welcome to my blog&quot;&gt;&lt;/a&gt;Welcome to my blog&lt;/h2&gt;&lt;p&gt;It’s w</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>python调用c踩坑记录</title>
+    <link href="https://kktao.github.io/2020/12/30/python%E8%B0%83%E7%94%A8c%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/"/>
+    <id>https://kktao.github.io/2020/12/30/python%E8%B0%83%E7%94%A8c%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</id>
+    <published>2020-12-30T14:17:43.000Z</published>
+    <updated>2020-12-30T14:43:52.724Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="python调用c踩坑记录"><a href="#python调用c踩坑记录" class="headerlink" title="python调用c踩坑记录"></a>python调用c踩坑记录</h2><p>最近项目需求，使用python调用c语言写的so库</p><p>采用了python的ctypes模块</p><p>总结遇到的一些坑</p><h3 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h3><h4 id="类型关系"><a href="#类型关系" class="headerlink" title="类型关系"></a>类型关系</h4><ul><li>要注意python和c语言的变量类型的对应关系，这在高级语言和调用c语言上是特别重要的，在java调用c语言使用JNA时也尤其重要。</li><li>使用最多且尤其注意的是指针类型，如ctype类库中有c_void _p()、c_char_p()两种指针类型。除了自带的以上两种，还可以通过在python中创建一个类继承ctypes.Structure类，然后使用ctype.POINTER获取其指针。</li></ul><h4 id="python的对象生命周期"><a href="#python的对象生命周期" class="headerlink" title="python的对象生命周期"></a>python的对象生命周期</h4><ul><li>python在使用return返回值时创建一个对象，那么在返回以后即函数结束后就会释放对象。</li><li>python调用c语言的对象时，c语言（通extern “C”将c++按照c语言编译就可以使用new创建堆上的对象了）通过new创建一个堆上的对象，然后将将指针以void *类型返回给python。如果以后都不使用对象，必须在c类库这边封装dispose函数（用于调用delete释放new创建的资源），然后通过python调用c封装的dispose函数释放资源。一开始，准备将调用dispose的代码写在python的一个封装的指针对象的__delete__（）函数中，但是由于第一条，则选择了写在一个封装的指针对象的dispose（）函数中，手动调用dispose（）函数进行资源释放。</li></ul><h4 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h4><ul><li>python将函数通过指针的形式传给c类库中函数指针，然后在c类库中进行调用。</li><li>观察到python回调函数中打印的c类库中指针的地址比普通函数中长，是因为python回调函数是在c类库中调用的，所以是在栈空间。普通函数在python这边执行，是c类库new的对象指针传递过来的，所以在堆上。所以在python的回调函数中，要指定调用c类库函数时传入的参数指针的长度和返回值的指针的长度，可以通过函数名.retypes = ctypes.c_u_int_64，函数名.argstypes = [c_void_p,c_void_p]指定，不然python会将地址长度切断，地址变短，指针值错误，找不到指针。</li><li>在回调函数传入时，python的回调函数要加上self. 或者 设置为全局变量，延长回调函数的生命周期，不然注册函数结束后，回调函数就被回收了，c类库那边将找不到，发生段错误。</li></ul><p>未完待续，后面将补充例子进行解释…</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;python调用c踩坑记录&quot;&gt;&lt;a href=&quot;#python调用c踩坑记录&quot; class=&quot;headerlink&quot; title=&quot;python调用c踩坑记录&quot;&gt;&lt;/a&gt;python调用c踩坑记录&lt;/h2&gt;&lt;p&gt;最近项目需求，使用python调用c语言写的so库&lt;</summary>
+      
+    
+    
+    
+    
+    <category term="程序" scheme="https://kktao.github.io/tags/%E7%A8%8B%E5%BA%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>付费获取密码平台原理</title>
+    <link href="https://kktao.github.io/2020/12/29/%E4%BB%98%E8%B4%B9%E8%8E%B7%E5%8F%96%E5%AF%86%E7%A0%81%E5%B9%B3%E5%8F%B0%E5%8E%9F%E7%90%86/"/>
+    <id>https://kktao.github.io/2020/12/29/%E4%BB%98%E8%B4%B9%E8%8E%B7%E5%8F%96%E5%AF%86%E7%A0%81%E5%B9%B3%E5%8F%B0%E5%8E%9F%E7%90%86/</id>
+    <published>2020-12-29T14:08:35.000Z</published>
+    <updated>2020-12-30T14:43:52.724Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="付费获取密码平台原理"><a href="#付费获取密码平台原理" class="headerlink" title="付费获取密码平台原理"></a>付费获取密码平台原理</h2><h3 id="故事开始"><a href="#故事开始" class="headerlink" title="故事开始"></a>故事开始</h3><p>在网络上找一本书的pdf，通过一个网址找到了书籍对应的百度网盘的zip压缩包</p><p>开心得不得了，以为可以白嫖了pdf了</p><p>解压书籍，里面包含了一个zip加密压缩包（包含书籍pdf），一个txt文件（里面写了获取密码的网址）</p><p>原来是要去指定网址支付，获取解压密码，然后才能获取pdf资源</p><h3 id="获取密码平台的原理"><a href="#获取密码平台的原理" class="headerlink" title="获取密码平台的原理"></a>获取密码平台的原理</h3><p>网址：<a href="http://www.yiquma.com/?code=OrsmJ7b4yEmU212K">http://www.yiquma.com/?code=OrsmJ7b4yEmU212K</a></p><ul><li>平台支持微信支付和支付宝支付，提供了两种二维码</li><li>通过url中的code与指定书籍绑定</li><li>支付以后，可以通过微信或者支付宝返回的订单编号，查询密码</li></ul><table><thead><tr><th>表1</th><th></th><th></th></tr></thead><tbody><tr><td>code</td><td>文件名</td><td>密码</td></tr></tbody></table><table><thead><tr><th>表2</th><th></th></tr></thead><tbody><tr><td>订单编号</td><td>code</td></tr></tbody></table><p>表1和表2是作者猜测的，后台通过订单编号就可以查询密码</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;付费获取密码平台原理&quot;&gt;&lt;a href=&quot;#付费获取密码平台原理&quot; class=&quot;headerlink&quot; title=&quot;付费获取密码平台原理&quot;&gt;&lt;/a&gt;付费获取密码平台原理&lt;/h2&gt;&lt;h3 id=&quot;故事开始&quot;&gt;&lt;a href=&quot;#故事开始&quot; class=&quot;head</summary>
+      
+    
+    
+    
+    
+    <category term="网站" scheme="https://kktao.github.io/tags/%E7%BD%91%E7%AB%99/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>电影推荐-热血合唱团</title>
+    <link href="https://kktao.github.io/2020/12/27/%E7%94%B5%E5%BD%B1%E6%8E%A8%E8%8D%90-%E7%83%AD%E8%A1%80%E5%90%88%E5%94%B1%E5%9B%A2/"/>
+    <id>https://kktao.github.io/2020/12/27/%E7%94%B5%E5%BD%B1%E6%8E%A8%E8%8D%90-%E7%83%AD%E8%A1%80%E5%90%88%E5%94%B1%E5%9B%A2/</id>
+    <published>2020-12-27T13:06:21.000Z</published>
+    <updated>2020-12-30T14:43:52.724Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="热血合唱团"><a href="#热血合唱团" class="headerlink" title="热血合唱团"></a>热血合唱团</h2><p>电影讲述了一群来自差一点的几个学校的一群“差生”，他们是大家眼中的学习不好、品行不好的小混混，有老爸是个赌鬼经常家暴，有口齿不清不能独立，有自闭症患者，有在家得不到认同感，有出生显赫压力巨大的…他们一起组成了这个合唱团，合唱团老师也有不好的事情…<br>每个人都有缺点和不足，或是遇到了困难，但是通过音乐，音乐选择了他们，让他们走到了一起…<br>音乐和团队改变了他们，建立了他们的信心，战胜了困难，找回了自我…<br>最后，出色的合唱感动了所有人…<br>在看这部电影时，有几点触动了我…</p><ul><li>第一关于合唱，以及电影里的cosplay，一开始我是不了解的，所以之前我对其的定位是不喜欢、没那么重要。有时候，当我们不了解时一个东西时不应该妄加评论，只有当你去尝试了解、学习了以后，才知道这个东西的价值和它吸引人的地方。</li><li>第二看这部电影的时候，我感觉自己在那个青涩的年纪，一个团队，一群朋友，互相鼓励，互相帮助和支持。同时，要感谢在学习生涯中遇到好的老师，他们教会了你好的人生态度和积极乐观的心态，让你学会去感受这个世界，积极乐观，一步一步探索，去寻找做为人的你的真正价值，一种活法。这是一件很幸运的、很值得感激的事情。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;热血合唱团&quot;&gt;&lt;a href=&quot;#热血合唱团&quot; class=&quot;headerlink&quot; title=&quot;热血合唱团&quot;&gt;&lt;/a&gt;热血合唱团&lt;/h2&gt;&lt;p&gt;电影讲述了一群来自差一点的几个学校的一群“差生”，他们是大家眼中的学习不好、品行不好的小混混，有老爸是个赌鬼经常家暴</summary>
+      
+    
+    
+    
+    
+    <category term="电影 团队 音乐" scheme="https://kktao.github.io/tags/%E7%94%B5%E5%BD%B1-%E5%9B%A2%E9%98%9F-%E9%9F%B3%E4%B9%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>电影推荐--127小时</title>
+    <link href="https://kktao.github.io/2020/12/20/%E7%94%B5%E5%BD%B1%E6%8E%A8%E8%8D%90-127%E5%B0%8F%E6%97%B6/"/>
+    <id>https://kktao.github.io/2020/12/20/%E7%94%B5%E5%BD%B1%E6%8E%A8%E8%8D%90-127%E5%B0%8F%E6%97%B6/</id>
+    <published>2020-12-20T07:05:27.000Z</published>
+    <updated>2020-12-30T14:43:52.724Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="127小时"><a href="#127小时" class="headerlink" title="127小时"></a>127小时</h2><p>故事讲述了一个 热爱探险的年轻人阿伦，在前往峡谷探险的过程中，在峡谷下降的时候，被一块松动的大石头掉落下来，卡住了手臂…</p><p>阿伦展开了自救，心理暗示，不放弃，采用各种方法…</p><p>我被电影阿伦的经历震撼住了，会想如果是我遇到这种情况，我能走出去吗？是怎样的毅力能坚持这么久？他不停在提醒自己，保持清醒的头脑，不要睡过去，自己用小刀切断了自己的前臂…</p><p>最后，走了出去，应该是一次新的重生，对事物的看法都有的了不同的认知，更加珍惜亲情，更加爱惜身边的人，更加爱惜生命。他仍然热爱探险，但是每次出去都会留下纸条，告诉别人自己的行踪…</p><p>不管我们遇到什么样的困难，都不应该放弃，只要活着，一切都有希望…</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;127小时&quot;&gt;&lt;a href=&quot;#127小时&quot; class=&quot;headerlink&quot; title=&quot;127小时&quot;&gt;&lt;/a&gt;127小时&lt;/h2&gt;&lt;p&gt;故事讲述了一个 热爱探险的年轻人阿伦，在前往峡谷探险的过程中，在峡谷下降的时候，被一块松动的大石头掉落下来，卡住了手</summary>
+      
+    
+    
+    
+    
+    <category term="电影" scheme="https://kktao.github.io/tags/%E7%94%B5%E5%BD%B1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>电影推荐--完美的世界</title>
+    <link href="https://kktao.github.io/2020/12/03/%E7%94%B5%E5%BD%B1%E6%8E%A8%E8%8D%90-%E5%AE%8C%E7%BE%8E%E7%9A%84%E4%B8%96%E7%95%8C/"/>
+    <id>https://kktao.github.io/2020/12/03/%E7%94%B5%E5%BD%B1%E6%8E%A8%E8%8D%90-%E5%AE%8C%E7%BE%8E%E7%9A%84%E4%B8%96%E7%95%8C/</id>
+    <published>2020-12-03T15:48:27.000Z</published>
+    <updated>2020-12-30T14:43:52.724Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="完美的世界"><a href="#完美的世界" class="headerlink" title="完美的世界"></a>完美的世界</h2><p>小菲利很可爱，罪犯和小菲利在一起，演绎了父子情</p><p>在逃跑的旅途中，小菲利经历了刺激和快乐，布奇不是他的父亲，但是像一个完美的父亲教给了小菲利很多东西…</p><p>永远有耐心，永远把你当成大人，尊重你，欣赏你</p><p>比如教他有责任感，布奇对小菲利说”鲍勃是个顾家的好男人，这是男人最伟大的成就”</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;完美的世界&quot;&gt;&lt;a href=&quot;#完美的世界&quot; class=&quot;headerlink&quot; title=&quot;完美的世界&quot;&gt;&lt;/a&gt;完美的世界&lt;/h2&gt;&lt;p&gt;小菲利很可爱，罪犯和小菲利在一起，演绎了父子情&lt;/p&gt;
+&lt;p&gt;在逃跑的旅途中，小菲利经历了刺激和快乐，布奇不是他的父</summary>
+      
+    
+    
+    
+    
+    <category term="电影" scheme="https://kktao.github.io/tags/%E7%94%B5%E5%BD%B1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>记一次电影音乐鉴赏课</title>
+    <link href="https://kktao.github.io/2020/11/05/%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%94%B5%E5%BD%B1%E9%9F%B3%E4%B9%90%E9%89%B4%E8%B5%8F%E8%AF%BE/"/>
+    <id>https://kktao.github.io/2020/11/05/%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%94%B5%E5%BD%B1%E9%9F%B3%E4%B9%90%E9%89%B4%E8%B5%8F%E8%AF%BE/</id>
+    <published>2020-11-05T12:28:09.000Z</published>
+    <updated>2020-12-30T14:43:52.724Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="提高文学与艺术审美。"><a href="#提高文学与艺术审美。" class="headerlink" title="提高文学与艺术审美。"></a>提高文学与艺术审美。</h2><ul><li><p>贝多芬的月光奏鸣曲</p></li><li><p>进行曲和圆舞曲</p></li></ul><h3 id="早期科幻电影"><a href="#早期科幻电影" class="headerlink" title="早期科幻电影"></a>早期科幻电影</h3><p>理查施特劳斯 <strong>查拉图斯拉如是说</strong></p><ul><li>电影：2001 a space odyssey</li><li>用滋滋滋…的声音描述人类起源时期的混沌时期</li><li>小约翰·施特劳斯</li><li>奥地利音乐世家—施特劳斯家族：父亲,老约翰施特劳斯1804-1849年（圆舞曲之父）；子：小约翰施特劳斯1825-1899年（圆舞曲之王）,约瑟夫施特劳斯1827-1870年，爱德华施特劳斯1835-1916年.</li></ul><p>乐曲由序奏、五个圆舞曲和尾声组成。<br>第一段，小提琴碎弓奏出轻弱的震音，如同多瑙河水微波荡漾，在它的衬托下，圆号以柔和的音色，如歌地奏出主题动机。<br>大提琴接过主题，温柔，深情<br>第二段，速度变快，三拍子圆舞曲节奏的出现带来了勃勃生机<br>圆舞曲部分（五个小圆舞曲）<br>结束部分<br>讲了人的进化…</p><p>蒙太奇手法<br>一个猿猴，拿着一根兽骨敲击一个牛的头骨，镜头突然转向“倒下了一头活牛”，人类学会了使用工具。</p><p>少年派的奇幻漂流记</p><p>有趣的灵魂会带给你好的点子、丰富的生活。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;提高文学与艺术审美。&quot;&gt;&lt;a href=&quot;#提高文学与艺术审美。&quot; class=&quot;headerlink&quot; title=&quot;提高文学与艺术审美。&quot;&gt;&lt;/a&gt;提高文学与艺术审美。&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;贝多芬的月光奏鸣曲&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;进行</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>hexo博客搭建记录</title>
+    <link href="https://kktao.github.io/2020/11/05/hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/"/>
+    <id>https://kktao.github.io/2020/11/05/hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/</id>
+    <published>2020-11-05T11:21:32.000Z</published>
+    <updated>2020-12-30T14:43:52.724Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="hexo博客搭建记录"><a href="#hexo博客搭建记录" class="headerlink" title="hexo博客搭建记录"></a>hexo博客搭建记录</h2><p>最开始hexo博客是因为看到了<a href="https://cosmosning.github.io/">CosmosNing的个人博客</a>，感觉效果很Nice。</p><p>开始参考他的<a href="https://cosmosning.github.io/2020/03/12/shi-yong-hexo-da-jian-bing-bu-shu-ge-ren-bo-ke/">使用 Hexo搭建并部署个人博客</a>的这篇文章。但是在搭建的过程中，遇到了一些问题，这里记录下来，给需要的同学参考。</p><h3 id="1、安装hexo环境遇到的网络问题"><a href="#1、安装hexo环境遇到的网络问题" class="headerlink" title="1、安装hexo环境遇到的网络问题"></a>1、安装hexo环境遇到的网络问题</h3><p>在使用ubuntu的apt命令安装nodejs和npm后，开始使用如下命令安装hexo环境。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure><p>但是，遇到了网络问题，一直卡顿，和各种网络不能连接的报错！参考了网上，代理、换淘宝源、使用cnpm等，都没能解决。<br><strong>解决方法</strong>：<br>参考<a href="https://hexo.io/zh-cn/docs/">Hexo官方文档</a>，从<a href="https://github.com/nodesource/distributions">NodeSource</a>安装最新版的Nodejs。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Using Ubuntu </span><br><span class="line">curl -sL https:&#x2F;&#x2F;deb.nodesource.com&#x2F;setup_15.x | sudo -E bash -</span><br><span class="line">sudo apt-get install -y nodejs</span><br></pre></td></tr></table></figure><h3 id="2、使用TravisCI部署时遇到问题"><a href="#2、使用TravisCI部署时遇到问题" class="headerlink" title="2、使用TravisCI部署时遇到问题"></a>2、使用TravisCI部署时遇到问题</h3><p>在使用TravisCI部署博客时，遇到了“–token” 相关的问题，花费了大量的时间，没有解决，发现在TravisCI仓库的issues里也有这个问题亟待解决。<br><strong>解决方法</strong><br>最终，选择了Actions部署Hexo。<br>可以参考我在”.github/workflows/action.yaml”中的自动部署<a href="https://github.com/kktao/kktao.github.io">配置</a>。</p><h3 id="3、在使用部署时，遇到“xxx-md”文件中的某个属性不能识别"><a href="#3、在使用部署时，遇到“xxx-md”文件中的某个属性不能识别" class="headerlink" title="3、在使用部署时，遇到“xxx.md”文件中的某个属性不能识别"></a>3、在使用部署时，遇到“xxx.md”文件中的某个属性不能识别</h3><p>在使用部署时，遇到“xxx.md”文件中的某个属性不能识别，如我遇到了README.md中的“note”属性不能识别，产生报错。<br><strong>解决方法</strong>：<br>直接将REDEME.md文件删除，即直接将产生报错的文件删除，再尝试部署。</p><h3 id="4、在部署成功后，访问时显示404"><a href="#4、在部署成功后，访问时显示404" class="headerlink" title="4、在部署成功后，访问时显示404"></a>4、在部署成功后，访问时显示404</h3><p>在使用Actions部署成功后，但是访问时遇到了404的问题。<br><strong>解决方法</strong>：<br>在your_github_name.github.io仓库的setting中，将仓库的”GithubPages”的Source设置为master分支。</p>]]></content>
+    
+    
+    <summary type="html">记一次blog部署过程</summary>
+    
+    
+    
+    <category term="笔记" scheme="https://kktao.github.io/categories/%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="hexo" scheme="https://kktao.github.io/tags/hexo/"/>
+    
+    <category term="blog" scheme="https://kktao.github.io/tags/blog/"/>
+    
+  </entry>
+  
+</feed>
